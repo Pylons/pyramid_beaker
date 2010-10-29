@@ -21,6 +21,20 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         session = self._makeOne(request)
         self.failUnless(session.new)
 
+    def test___setitem__calls_save(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        session['a'] = 1
+        self.assertEqual(session.__dict__['_dirty'], True)
+
+    def test___delitem__calls_save(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        session['a'] = 1
+        del session.__dict__['_dirty']
+        del session['a']
+        self.assertEqual(session.__dict__['_dirty'], True)
+
 class Test_session_factory_from_settings(unittest.TestCase):
     def _callFUT(self, settings):
         from pyramid_beaker import session_factory_from_settings

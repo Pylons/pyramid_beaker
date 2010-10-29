@@ -11,8 +11,6 @@ def BeakerSessionFactoryConfig(**options):
     """ Return a Pyramid session factory using Beaker session settings
     supplied directly as ``**options``"""
     if not 'auto' in options:
-        # XXX beaker badly wants people to call save; i don't know
-        # why it needs it if they call methods that do mutation
         options['auto'] = True 
 
     class PyramidBeakerSessionObject(SessionObject):
@@ -36,10 +34,29 @@ def BeakerSessionFactoryConfig(**options):
 
         changed = SessionObject.save
 
-        # XXX modified
+        # modifying dictionary methods
+        # XXX these methods are missing
+        # clear = call_save(SessionObject.clear)
+        # update = call_save(SessionObject.update)
+        # setdefault = call_save(SessionObject.setdefault)
+        # pop = call_save(SessionObject.pop)
+        # popitem = call_save(SessionObject.popitem)
+        __setitem__ = call_save(SessionObject.__setitem__)
+        __delitem__ = call_save(SessionObject.__delitem__)
 
     return PyramidBeakerSessionObject
-        
+
+def call_save(wrapped):
+    # XXX by default, in non-auto-mode beaker badly wants people to
+    # call save even though it should know something has changed when
+    # a mutating method is called.  This hack should be removed if
+    # Beaker ever starts to do this by default.
+    def save(session, *arg, **kw):
+        value = wrapped(session, *arg, **kw)
+        session.save()
+        return value
+    save.__doc__ = wrapped.__doc__
+    return save
 
 def session_factory_from_settings(settings):
     """ Return a Pyramid session factory using Beaker session settings
