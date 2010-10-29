@@ -10,9 +10,6 @@ from beaker.util import coerce_session_params
 def BeakerSessionFactoryConfig(**options):
     """ Return a Pyramid session factory using Beaker session settings
     supplied directly as ``**options``"""
-    if not 'auto' in options:
-        options['auto'] = True 
-
     class PyramidBeakerSessionObject(SessionObject):
         _options = options
         def __init__(self, request):
