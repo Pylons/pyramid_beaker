@@ -19,6 +19,8 @@ def BeakerSessionFactoryConfig(**options):
                                 response.headerlist.append(('Set-Cookie', cook))
             request.add_response_callback(session_callback)
 
+        # ISession API
+
         @property
         def new(self):
             return self.last_accessed is None
@@ -26,12 +28,27 @@ def BeakerSessionFactoryConfig(**options):
         changed = SessionObject.save
 
         # modifying dictionary methods
-        # XXX these methods are missing
-        # clear = call_save(SessionObject.clear)
-        # update = call_save(SessionObject.update)
-        # setdefault = call_save(SessionObject.setdefault)
-        # pop = call_save(SessionObject.pop)
-        # popitem = call_save(SessionObject.popitem)
+
+        @call_save
+        def clear(self):
+            return self._session().clear()
+
+        @call_save
+        def update(self, d, **kw):
+            return self._session().update(d, **kw)
+
+        @call_save
+        def setdefault(self, k, d=None):
+            return self._session().setdefault(k, d)
+
+        @call_save
+        def pop(self, k, d=None):
+            return self._session().pop(k, d)
+
+        @call_save
+        def popitem(self):
+            return self._session().popitem()
+            
         __setitem__ = call_save(SessionObject.__setitem__)
         __delitem__ = call_save(SessionObject.__delitem__)
 

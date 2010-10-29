@@ -35,6 +35,55 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         del session['a']
         self.assertEqual(session.__dict__['_dirty'], True)
 
+    def test_changed(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        session.changed()
+        self.assertEqual(session.__dict__['_dirty'], True)
+        
+    def test_clear(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        session['a'] = 1
+        session.clear()
+        self.failIf('a' in session)
+        self.assertEqual(session.__dict__['_dirty'], True)
+
+    def test_update(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        session.update({'a':1}, b=2)
+        self.failUnless('a' in session)
+        self.failUnless('b' in session)
+        self.assertEqual(session.__dict__['_dirty'], True)
+
+    def test_setdefault(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        session.setdefault('a', 'b')
+        self.failUnless('a' in session)
+        self.assertEqual(session.__dict__['_dirty'], True)
+        
+    def test_pop(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        session['a'] = 1
+        session.__dict__['_dirty'] = False
+        result = session.pop('a')
+        self.failIf('a' in session)
+        self.assertEqual(result, 1)
+        self.assertEqual(session.__dict__['_dirty'], True)
+
+    def test_popitem(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        session['a'] = 1
+        session.__dict__['_dirty'] = False
+        result = session.popitem()
+        self.failIf('a' in session)
+        self.assertEqual(result, ('a', 1))
+        self.assertEqual(session.__dict__['_dirty'], True)
+
 class Test_session_factory_from_settings(unittest.TestCase):
     def _callFUT(self, settings):
         from pyramid_beaker import session_factory_from_settings
