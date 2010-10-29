@@ -1,12 +1,6 @@
 from beaker.session import SessionObject
 from beaker.util import coerce_session_params
 
-## session.type = file
-## session.data_dir = %(here)s/data/sessions/data
-## session.lock_dir = %(here)s/data/sessions/lock
-## session.key = {{project}}
-## session.secret = your_app_secret_string
-
 def BeakerSessionFactoryConfig(**options):
     """ Return a Pyramid session factory using Beaker session settings
     supplied directly as ``**options``"""
@@ -44,10 +38,10 @@ def BeakerSessionFactoryConfig(**options):
     return PyramidBeakerSessionObject
 
 def call_save(wrapped):
-    # XXX by default, in non-auto-mode beaker badly wants people to
-    # call save even though it should know something has changed when
-    # a mutating method is called.  This hack should be removed if
-    # Beaker ever starts to do this by default.
+    """ By default, in non-auto-mode beaker badly wants people to
+    call save even though it should know something has changed when
+    a mutating method is called.  This hack should be removed if
+    Beaker ever starts to do this by default. """
     def save(session, *arg, **kw):
         value = wrapped(session, *arg, **kw)
         session.save()
