@@ -1,20 +1,24 @@
 from beaker.session import SessionObject
 from beaker.util import coerce_session_params
 
+
 def BeakerSessionFactoryConfig(**options):
     """ Return a Pyramid session factory using Beaker session settings
     supplied directly as ``**options``"""
     class PyramidBeakerSessionObject(SessionObject):
         _options = options
+
         def __init__(self, request):
             SessionObject.__init__(self, request.environ, **self._options)
+
             def session_callback(request, response):
                 exception = getattr(request, 'exception', None)
                 if exception is None and self.accessed():
                     self.persist()
                     headers = self.__dict__['_headers']
                     if headers['set_cookie'] and headers['cookie_out']:
-                        response.headerlist.append(('Set-Cookie', headers['cookie_out']))
+                        response.headerlist.append(
+                            ('Set-Cookie', headers['cookie_out']))
             request.add_response_callback(session_callback)
 
         # ISession API
@@ -46,11 +50,12 @@ def BeakerSessionFactoryConfig(**options):
         @call_save
         def popitem(self):
             return self._session().popitem()
-            
+
         __setitem__ = call_save(SessionObject.__setitem__)
         __delitem__ = call_save(SessionObject.__delitem__)
 
     return PyramidBeakerSessionObject
+
 
 def call_save(wrapped):
     """ By default, in non-auto-mode beaker badly wants people to
@@ -63,6 +68,7 @@ def call_save(wrapped):
         return value
     save.__doc__ = wrapped.__doc__
     return save
+
 
 def session_factory_from_settings(settings):
     """ Return a Pyramid session factory using Beaker session settings
@@ -79,5 +85,3 @@ def session_factory_from_settings(settings):
 
     options = coerce_session_params(options)
     return BeakerSessionFactoryConfig(**options)
-    
-    
