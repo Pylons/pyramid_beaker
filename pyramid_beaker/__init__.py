@@ -1,11 +1,14 @@
 from beaker.session import SessionObject
 from beaker.util import coerce_session_params
 
+from pyramid.interfaces import ISession
+from zope.interface import implements
 
 def BeakerSessionFactoryConfig(**options):
     """ Return a Pyramid session factory using Beaker session settings
     supplied directly as ``**options``"""
     class PyramidBeakerSessionObject(SessionObject):
+        implements(ISession)
         _options = options
 
         def __init__(self, request):

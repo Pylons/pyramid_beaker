@@ -4,7 +4,14 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
     def _makeOne(self, request, **options):
         from pyramid_beaker import BeakerSessionFactoryConfig
         return BeakerSessionFactoryConfig(**options)(request)
-        
+
+    def test_instance_conforms(self):
+        from zope.interface.verify import verifyObject
+        from pyramid.interfaces import ISession
+        request = DummyRequest()
+        session = self._makeOne(request)
+        verifyObject(ISession, session)
+
     def test_callback(self):
         request = DummyRequest()
         session = self._makeOne(request)
