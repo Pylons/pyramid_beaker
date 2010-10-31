@@ -1,4 +1,6 @@
 0.0 (unreleased)
 ----------------
 
+- Use pylons sphinx theme, this requires the pylons_sphinx_theme project to be
+  available and symlinked into docs/ as _themes.
 - Initial release.
