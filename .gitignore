@@ -1,3 +1,5 @@
 .coverage
 *.egg-info
+*.egg
 *.pyc
+dist/
