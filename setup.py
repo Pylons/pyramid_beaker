@@ -24,7 +24,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 requires = ['pyramid', 'beaker']
 
 setup(name='pyramid_beaker',
-      version='0.1',
+      version='0.0',
       description='Beaker session factory backend for Pyramid',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
@@ -34,8 +34,8 @@ setup(name='pyramid_beaker',
         ],
       keywords='web wsgi pylons pyramid',
       author="Chris McDonough, Agendaless Consulting",
-      author_email="repoze-dev@lists.repoze.org",
-      url="http://www.repoze.org",
+      author_email="pylons-devel@googlegroups.com",
+      url="http://docs.pylonshq.com",
       license="BSD-derived (http://www.repoze.org/LICENSE.txt)",
       packages=find_packages(),
       include_package_data=True,
