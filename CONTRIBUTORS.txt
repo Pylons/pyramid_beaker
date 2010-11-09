@@ -106,4 +106,6 @@ her name.
 Contributors
 ------------
 
-Chris McDonough, 2010/11/08
+- Chris McDonough, 2010/11/08
+
+- Tres Seaver, 2010/11/09
