@@ -1,10 +1,14 @@
 pyramid_beaker
 ==============
 
-A :term:`Beaker` session factory backend for :term:`Pyramid`.
+A :term:`Beaker` session factory backend for :term:`Pyramid`, also cache
+configurator.
 
 Usage
 -----
+
+Session management
+````````
 
 In the configuration portion of your :term:`Pyramid` app, use the
 :func:`pyramid_beaker.BeakerSessionFactoryConfig` function or the
@@ -53,6 +57,58 @@ in the ``__init__.py`` of your Pyramid application that uses an
        config = Configurator(root_factory=get_root, settings=settings)
        config.begin()
        config.set_session_factory(session_factory)
+       # ... other configuration stuff...
+       config.end()
+       return config.make_wsgi_app()
+
+
+Beaker cache region support
+```````````````````````````
+
+In the configuration portion of your :term:`Pyramid` app, use the
+:func:`pyramid_beaker.set_cache_regions_from_settings` function to
+set Beaker's cache regions. At that point, you can use Beaker's `cache_region`
+functionality to enable caching for Your application. 
+
+:func:`pyramid_beaker.set_cache_regions_from_settings` obtains region
+settings from the ``**settings`` dictionary passed to the
+Configurator.  It assumes that you've placed cache configuration
+parameters prefixed with ``cache.`` in your Pyramid application's
+``.ini`` file.  For example:
+
+.. code-block:: ini
+
+   [app:myapp]
+   .. other settings ..
+   cache.regions = default_term, second, short_term, long_term
+   cache.type = memory
+   cache.second.expire = 1
+   cache.short_term.expire = 60
+   cache.default_term.expire = 300
+   cache.long_term.expire = 3600
+
+If your ``.ini`` file has such settings, you can use
+:func:`pyramid_beaker.set_cache_regions_from_settings` in your
+application's configuration.  For example, let's assume this code is
+in the ``__init__.py`` of your Pyramid application that uses an
+``.ini`` file with the ``cache.`` settings above to obtain its
+``**settings`` dictionary.
+
+.. code-block:: python
+
+   from pyramid_beaker import set_cache_regions_from_settings
+   from pyramid.configuration import configurator
+
+   def app(global_config, **settings):
+       """ This function returns a WSGI application.
+       
+       It is usually called by the PasteDeploy framework during 
+       ``paster serve``.
+       """
+       zcml_file = settings.get('configure_zcml', 'configure.zcml')
+       set_cache_regions_from_settings(settings)
+       config = Configurator(root_factory=get_root, settings=settings)
+       config.begin()
        # ... other configuration stuff...
        config.end()
        return config.make_wsgi_app()

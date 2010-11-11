@@ -1,3 +1,4 @@
+from beaker import cache
 from beaker.session import SessionObject
 from beaker.util import coerce_session_params
 
@@ -88,3 +89,31 @@ def session_factory_from_settings(settings):
 
     options = coerce_session_params(options)
     return BeakerSessionFactoryConfig(**options)
+
+def set_cache_regions_from_settings(settings):
+    """ Add cache support to the Pylons application.
+    
+    The ``settings`` passed to the configurator are used to setup
+    the cache options. Cache options in the settings should start
+    with either 'beaker.cache.' or 'cache.'.
+    
+    """
+    cache_settings = {'regions':None}
+    for key in settings.keys():
+        for prefix in ['beaker.cache.', 'cache.']:
+            if key.startswith(prefix):
+                name = key.split(prefix)[1].strip()
+                cache_settings[name] = settings[key].strip()
+    if cache_settings['regions']:
+        for region in cache_settings['regions'].split(','):
+            region = region.strip()
+            region_settings = {}
+            for key, value in cache_settings.items():
+                if key.startswith(region):
+                    region_settings[key.split('.')[1]] = value
+            region_settings['expire'] = int(region_settings.get('expire', 60))
+            region_settings.setdefault('lock_dir',
+                                       cache_settings.get('lock_dir'))
+            if 'type' not in region_settings:
+                region_settings['type'] = cache_settings.get('type', 'memory')
+            cache.cache_regions[region] = region_settings

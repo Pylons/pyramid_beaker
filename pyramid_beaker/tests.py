@@ -112,3 +112,59 @@ class DummyRequest:
 class DummyResponse:
     def __init__(self):
         self.headerlist = []
+        
+class TestCacheConfiguration(unittest.TestCase):
+    def _set_settings(self):
+        return {'cache.regions':'default_term, second, short_term, long_term',
+                'cache.type':'memory',
+                'cache.second.expire':'1',
+                'cache.short_term.expire':'60',
+                'cache.default_term.expire':'300',
+                'cache.long_term.expire':'3600',
+                }
+    
+    def test_add_cache_no_regions(self):
+        from pyramid_beaker import set_cache_regions_from_settings
+        import beaker
+        settings = self._set_settings()
+        beaker.cache.cache_regions = {}
+        settings['cache.regions'] = ''
+        set_cache_regions_from_settings(settings)
+        self.assertEqual(beaker.cache.cache_regions, {})
+
+    def test_add_cache_single_region_no_expire(self):
+        from pyramid_beaker import set_cache_regions_from_settings
+        import beaker
+        settings = self._set_settings()
+        beaker.cache.cache_regions = {}
+        settings['cache.regions'] = 'default_term'
+        del settings['cache.default_term.expire']
+        set_cache_regions_from_settings(settings)
+        default_term = beaker.cache.cache_regions.get('default_term')
+        self.assertEqual(default_term, {'expire': 60, 'type': 'memory',
+                                      'lock_dir': None})
+    
+    def test_add_cache_multiple_region(self):
+        from pyramid_beaker import set_cache_regions_from_settings
+        import beaker
+        settings = self._set_settings()
+        beaker.cache.cache_regions = {}
+        settings['cache.regions'] = 'default_term, short_term'
+        settings['cache.lock_dir'] = 'foo'
+        settings['cache.short_term.expire'] = '60'
+        settings['cache.default_term.type'] = 'file'
+        settings['cache.default_term.expire'] = '300'
+        set_cache_regions_from_settings(settings)
+        default_term = beaker.cache.cache_regions.get('default_term')
+        short_term = beaker.cache.cache_regions.get('short_term')
+        self.assertEqual(short_term.get('expire'),
+                         int(settings['cache.short_term.expire']))
+        self.assertEqual(short_term.get('lock_dir'), settings['cache.lock_dir'])
+        self.assertEqual(short_term.get('type'), 'memory')
+
+        self.assertEqual(default_term.get('expire'),
+                         int(settings['cache.default_term.expire']))
+        self.assertEqual(default_term.get('lock_dir'),
+                         settings['cache.lock_dir'])
+        self.assertEqual(default_term.get('type'),
+                         settings['cache.default_term.type'])
