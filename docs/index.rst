@@ -8,7 +8,7 @@ Usage
 -----
 
 Session management
-````````
+``````````````````
 
 In the configuration portion of your :term:`Pyramid` app, use the
 :func:`pyramid_beaker.BeakerSessionFactoryConfig` function or the

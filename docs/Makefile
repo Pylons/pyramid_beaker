@@ -25,7 +25,7 @@ help:
 clean:
 	-rm -rf .build/*
 
-html:
+html: _themes/
 	mkdir -p .build/html .build/doctrees
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) .build/html
 	@echo
@@ -41,7 +41,7 @@ pickle:
 
 web: pickle
 
-htmlhelp:
+htmlhelp: _themes/
 	mkdir -p .build/htmlhelp .build/doctrees
 	$(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) .build/htmlhelp
 	@echo
@@ -68,3 +68,6 @@ linkcheck:
 	@echo
 	@echo "Link check complete; look for any errors in the above output " \
 	      "or in .build/linkcheck/output.txt."
+
+_themes:
+	git clone git://github.com/Pylons/pylons_sphinx_theme.git _themes
