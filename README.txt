@@ -7,4 +7,3 @@ system.
 
 See `the Pylons Project documentation <http://docs.pylonshq.com>`_ for more
 information.
-

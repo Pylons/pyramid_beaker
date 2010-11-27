@@ -1,8 +1,8 @@
-Next release
-------------
+0.2 (2010-11-27)
+----------------
 
 - Add cache_region support via
-  ``pyramid_beaker.set_cache_regions_from_settings` (and documented).
+  ``pyramid_beaker.set_cache_regions_from_settings`` (and documented).
 
 0.1
 ---
