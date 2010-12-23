@@ -1,6 +1,8 @@
 Next release
 ------------
 
+- Support ISession flash/csrf API added to Pyramid 1.0a8+.
+
 0.2 (2010-11-27)
 ----------------
 

@@ -1,3 +1,5 @@
+import os
+
 from beaker import cache
 from beaker.session import SessionObject
 from beaker.util import coerce_session_params
@@ -57,6 +59,29 @@ def BeakerSessionFactoryConfig(**options):
 
         __setitem__ = call_save(SessionObject.__setitem__)
         __delitem__ = call_save(SessionObject.__delitem__)
+
+        # Flash API methods
+        def flash(self, msg, queue='', allow_duplicate=True):
+            storage = self.setdefault('_f_' + queue, [])
+            if allow_duplicate or (msg not in storage):
+                storage.append(msg)
+
+        def pop_flash(self, queue=''):
+            storage = self.pop('_f_' + queue, [])
+            return storage
+
+        def peek_flash(self, queue=''):
+            storage = self.get('_f_' + queue, [])
+            return storage
+
+        # CSRF API methods
+        def new_csrf_token(self):
+            token = os.urandom(20).encode('hex')
+            self['_csrft_'] = token
+            return token
+
+        def get_csrf_token(self):
+            return self.get('_csrft_', None)
 
     return PyramidBeakerSessionObject
 

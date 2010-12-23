@@ -91,6 +91,72 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         self.assertEqual(result, ('a', 1))
         self.assertEqual(session.__dict__['_dirty'], True)
 
+    def test_flash_default(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        session.flash('msg1')
+        session.flash('msg2')
+        self.assertEqual(session['_f_'], ['msg1', 'msg2'])
+        
+    def test_flash_mixed(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        session.flash('warn1', 'warn')
+        session.flash('warn2', 'warn')
+        session.flash('err1', 'error')
+        session.flash('err2', 'error')
+        self.assertEqual(session['_f_warn'], ['warn1', 'warn2'])
+
+    def test_pop_flash_default_queue(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        queue = ['one', 'two']
+        session['_f_'] = queue
+        result = session.pop_flash()
+        self.assertEqual(result, queue)
+        self.assertEqual(session.get('_f_'), None)
+
+    def test_pop_flash_nodefault_queue(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        queue = ['one', 'two']
+        session['_f_error'] = queue
+        result = session.pop_flash('error')
+        self.assertEqual(result, queue)
+        self.assertEqual(session.get('_f_error'), None)
+
+    def test_peek_flash_default_queue(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        queue = ['one', 'two']
+        session['_f_'] = queue
+        result = session.peek_flash()
+        self.assertEqual(result, queue)
+        self.assertEqual(session.get('_f_'), queue)
+
+    def test_peek_flash_nodefault_queue(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        queue = ['one', 'two']
+        session['_f_error'] = queue
+        result = session.peek_flash('error')
+        self.assertEqual(result, queue)
+        self.assertEqual(session.get('_f_error'), queue)
+
+    def test_new_csrf_token(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        token = session.new_csrf_token()
+        self.assertEqual(token, session['_csrft_'])
+
+    def test_get_csrf_token(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        session['_csrft_'] = 'token'
+        token = session.get_csrf_token()
+        self.assertEqual(token, 'token')
+        self.failUnless('_csrft_' in session)
+
 class Test_session_factory_from_settings(unittest.TestCase):
     def _callFUT(self, settings):
         from pyramid_beaker import session_factory_from_settings
