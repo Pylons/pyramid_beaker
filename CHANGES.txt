@@ -1,6 +1,8 @@
 Next release
 ------------
 
+- Allow cache regions to inherit URL configuration from main cache options.
+
 0.3 (2010-12-29)
 ----------------
 

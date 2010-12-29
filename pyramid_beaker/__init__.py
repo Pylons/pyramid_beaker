@@ -141,4 +141,6 @@ def set_cache_regions_from_settings(settings):
                                        cache_settings.get('lock_dir'))
             if 'type' not in region_settings:
                 region_settings['type'] = cache_settings.get('type', 'memory')
+            if 'url' not in region_settings and 'url' in cache_settings:
+                region_settings['url'] = cache_settings['url']
             cache.cache_regions[region] = region_settings

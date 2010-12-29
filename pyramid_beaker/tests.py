@@ -234,3 +234,20 @@ class TestCacheConfiguration(unittest.TestCase):
                          settings['cache.lock_dir'])
         self.assertEqual(default_term.get('type'),
                          settings['cache.default_term.type'])
+    
+    def test_region_inherit_url(self):
+        from pyramid_beaker import set_cache_regions_from_settings
+        import beaker
+        settings = self._set_settings()
+        beaker.cache.cache_regions = {}
+        settings['cache.regions'] = 'default_term, short_term'
+        settings['cache.lock_dir'] = 'foo'
+        settings['cache.url'] = '127.0.0.1'
+        settings['cache.short_term.expire'] = '60'
+        settings['cache.default_term.type'] = 'file'
+        settings['cache.default_term.expire'] = '300'
+        set_cache_regions_from_settings(settings)
+        default_term = beaker.cache.cache_regions.get('default_term')
+        short_term = beaker.cache.cache_regions.get('short_term')
+        self.assertEqual(short_term.get('url'), settings['cache.url'])
+        self.assertEqual(default_term.get('url'), settings['cache.url'])
