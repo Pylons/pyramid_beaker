@@ -178,7 +178,43 @@ class DummyRequest:
 class DummyResponse:
     def __init__(self):
         self.headerlist = []
-        
+    
+class Test_session_cookie_on_exception(unittest.TestCase):
+
+    def _makeOne(self, request, **options):
+        from pyramid_beaker import BeakerSessionFactoryConfig
+        return BeakerSessionFactoryConfig(**options)(request)
+
+    def test_default_cookie_on_exception_setting(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        self.assertEqual(session._cookie_on_exception, False)
+
+    def test_cookie_on_exception_setting(self):
+        request = DummyRequest()
+        session = self._makeOne(request, cookie_on_exception=True)
+        self.assertEqual(session._cookie_on_exception, True)
+    
+    def _assert_session_persisted(self, request, session, expected):
+        # Checking response headers not likely best method of asserting 
+        # if Beaker's SessionObject.persist method was called.
+        # Not sure of best method of doing this.
+        request.exception = True 
+        session['use it'] = True
+        response = DummyResponse()
+        request.callbacks[0](request, response)
+        self.assertEqual(len(response.headerlist) == 1, expected)
+
+    def test_request_call_back_without_cookie_on_exception(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        self._assert_session_persisted(request, session, False)
+
+    def test_request_call_back_with_cookie_on_exception(self):
+        request = DummyRequest()
+        session = self._makeOne(request, cookie_on_exception=True)
+        self._assert_session_persisted(request, session, True)
+
 class TestCacheConfiguration(unittest.TestCase):
     def _set_settings(self):
         return {'cache.regions':'default_term, second, short_term, long_term',
