@@ -113,6 +113,24 @@ in the ``__init__.py`` of your Pyramid application that uses an
        config.end()
        return config.make_wsgi_app()
 
+Inherited region settings
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following optional region settings inherit from the main cache
+configuration or default as specified:
+
+``expire``
+  Inherits or defaults to 60 seconds.
+
+``lock_dir``
+  Inherits if specified.
+
+``type``
+  Inherits or defaults to ``memory``.
+
+``url``
+  Inherits if specified.
+
 API
 ---
 

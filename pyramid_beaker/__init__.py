@@ -137,10 +137,10 @@ def set_cache_regions_from_settings(settings):
                 if key.startswith(region):
                     region_settings[key.split('.')[1]] = value
             region_settings['expire'] = int(region_settings.get('expire', 60))
-            region_settings.setdefault('lock_dir',
-                                       cache_settings.get('lock_dir'))
+            if 'lock_dir' not in region_settings:
+                region_settings['lock_dir'] = cache_settings.get('lock_dir')
             if 'type' not in region_settings:
                 region_settings['type'] = cache_settings.get('type', 'memory')
-            if 'url' not in region_settings and 'url' in cache_settings:
-                region_settings['url'] = cache_settings['url']
+            if 'url' not in region_settings:
+                region_settings['url'] = cache_settings.get('url')
             cache.cache_regions[region] = region_settings
