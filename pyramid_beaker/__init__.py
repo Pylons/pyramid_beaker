@@ -5,26 +5,23 @@ from beaker.session import SessionObject
 from beaker.util import coerce_session_params
 
 from pyramid.interfaces import ISession
+from pyramid.settings import asbool
 from zope.interface import implements
 
 def BeakerSessionFactoryConfig(**options):
     """ Return a Pyramid session factory using Beaker session settings
     supplied directly as ``**options``"""
 
-    cookie_on_exception = options.pop('cookie_on_exception', False)
-
     class PyramidBeakerSessionObject(SessionObject):
         implements(ISession)
         _options = options
-        _cookie_on_exception = cookie_on_exception
-
+        _cookie_on_exception = _options.pop('cookie_on_exception', False)
         def __init__(self, request):
             SessionObject.__init__(self, request.environ, **self._options)
-
             def session_callback(request, response):
                 exception = getattr(request, 'exception', None)
-                if (exception is None or self._cookie_on_exception) \
-                                      and self.accessed():
+                if (exception is None or self._cookie_on_exception
+                    and self.accessed()):
                     self.persist()
                     headers = self.__dict__['_headers']
                     if headers['set_cookie'] and headers['cookie_out']:
@@ -115,6 +112,8 @@ def session_factory_from_settings(settings):
         for prefix in prefixes:
             if k.startswith(prefix):
                 option_name = k[len(prefix):]
+                if option_name == 'cookie_on_exception':
+                    v = asbool(v)
                 options[option_name] = v
 
     options = coerce_session_params(options)

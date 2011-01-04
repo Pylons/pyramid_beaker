@@ -3,6 +3,11 @@ Next release
 
 - Allow cache regions to inherit URL configuration from main cache options.
 
+- Respect a ``cookie_on_exception`` configuration value passed to the
+  ``BeakerSessionFactoryConfig`` constructor.  If this value is passed and
+  it's not false, session cookies will be set even on responses resulting
+  from an exception.
+
 0.3 (2010-12-29)
 ----------------
 

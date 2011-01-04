@@ -166,7 +166,17 @@ class Test_session_factory_from_settings(unittest.TestCase):
         settings = {'session.auto':'true', 'session.key':'foo'}
         factory = self._callFUT(settings)
         self.assertEqual(factory._options, {'auto':True, 'key':'foo'})
-    
+
+    def test_cookie_on_exception_true(self):
+        settings = {'session.cookie_on_exception':'true'}
+        factory = self._callFUT(settings)
+        self.assertEqual(factory._cookie_on_exception, True)
+
+    def test_cookie_on_exception_false(self):
+        settings = {'session.cookie_on_exception':'false'}
+        factory = self._callFUT(settings)
+        self.assertEqual(factory._cookie_on_exception, False)
+
 class DummyRequest:
     def __init__(self):
         self.callbacks = []
