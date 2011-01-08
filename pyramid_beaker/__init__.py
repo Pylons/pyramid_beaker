@@ -83,7 +83,10 @@ def BeakerSessionFactoryConfig(**options):
             return token
 
         def get_csrf_token(self):
-            return self.get('_csrft_', None)
+            token = self.get('_csrft_', None)
+            if token is None:
+                token = self.new_csrf_token()
+            return token
 
     return PyramidBeakerSessionObject
 

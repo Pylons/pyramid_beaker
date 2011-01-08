@@ -8,6 +8,9 @@ Next release
   it's not false, session cookies will be set even on responses resulting
   from an exception.
 
+- Update to new relationship between ``new_csrf_token`` and
+  ``get_csrf_token`` as described in Pyramid 1.0a9 interfaces.
+
 0.3 (2010-12-29)
 ----------------
 

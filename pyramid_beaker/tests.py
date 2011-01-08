@@ -157,6 +157,13 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         self.assertEqual(token, 'token')
         self.failUnless('_csrft_' in session)
 
+    def test_get_csrf_token_new(self):
+        request = DummyRequest()
+        session = self._makeOne(request)
+        token = session.get_csrf_token()
+        self.failUnless(token)
+        self.assertEqual(session['_csrft_'], token)
+
 class Test_session_factory_from_settings(unittest.TestCase):
     def _callFUT(self, settings):
         from pyramid_beaker import session_factory_from_settings
