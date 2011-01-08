@@ -24,7 +24,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 requires = ['pyramid', 'beaker']
 
 setup(name='pyramid_beaker',
-      version='0.4',
+      version='0.0',
       description='Beaker session factory backend for Pyramid',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
