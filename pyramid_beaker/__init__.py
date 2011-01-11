@@ -1,23 +1,27 @@
+import os
+
 from beaker import cache
 from beaker.session import SessionObject
 from beaker.util import coerce_session_params
 
 from pyramid.interfaces import ISession
+from pyramid.settings import asbool
 from zope.interface import implements
 
 def BeakerSessionFactoryConfig(**options):
     """ Return a Pyramid session factory using Beaker session settings
     supplied directly as ``**options``"""
+
     class PyramidBeakerSessionObject(SessionObject):
         implements(ISession)
         _options = options
-
+        _cookie_on_exception = _options.pop('cookie_on_exception', False)
         def __init__(self, request):
             SessionObject.__init__(self, request.environ, **self._options)
-
             def session_callback(request, response):
                 exception = getattr(request, 'exception', None)
-                if exception is None and self.accessed():
+                if (exception is None or self._cookie_on_exception
+                    and self.accessed()):
                     self.persist()
                     headers = self.__dict__['_headers']
                     if headers['set_cookie'] and headers['cookie_out']:
@@ -58,6 +62,32 @@ def BeakerSessionFactoryConfig(**options):
         __setitem__ = call_save(SessionObject.__setitem__)
         __delitem__ = call_save(SessionObject.__delitem__)
 
+        # Flash API methods
+        def flash(self, msg, queue='', allow_duplicate=True):
+            storage = self.setdefault('_f_' + queue, [])
+            if allow_duplicate or (msg not in storage):
+                storage.append(msg)
+
+        def pop_flash(self, queue=''):
+            storage = self.pop('_f_' + queue, [])
+            return storage
+
+        def peek_flash(self, queue=''):
+            storage = self.get('_f_' + queue, [])
+            return storage
+
+        # CSRF API methods
+        def new_csrf_token(self):
+            token = os.urandom(20).encode('hex')
+            self['_csrft_'] = token
+            return token
+
+        def get_csrf_token(self):
+            token = self.get('_csrft_', None)
+            if token is None:
+                token = self.new_csrf_token()
+            return token
+
     return PyramidBeakerSessionObject
 
 
@@ -85,6 +115,8 @@ def session_factory_from_settings(settings):
         for prefix in prefixes:
             if k.startswith(prefix):
                 option_name = k[len(prefix):]
+                if option_name == 'cookie_on_exception':
+                    v = asbool(v)
                 options[option_name] = v
 
     options = coerce_session_params(options)
@@ -112,8 +144,10 @@ def set_cache_regions_from_settings(settings):
                 if key.startswith(region):
                     region_settings[key.split('.')[1]] = value
             region_settings['expire'] = int(region_settings.get('expire', 60))
-            region_settings.setdefault('lock_dir',
-                                       cache_settings.get('lock_dir'))
+            if 'lock_dir' not in region_settings:
+                region_settings['lock_dir'] = cache_settings.get('lock_dir')
             if 'type' not in region_settings:
                 region_settings['type'] = cache_settings.get('type', 'memory')
+            if 'url' not in region_settings:
+                region_settings['url'] = cache_settings.get('url')
             cache.cache_regions[region] = region_settings

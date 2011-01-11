@@ -1,6 +1,26 @@
 Next release
 ------------
 
+- ...
+
+0.4 (2011-01-08)
+----------------
+
+- Allow cache regions to inherit URL configuration from main cache options.
+
+- Respect a ``cookie_on_exception`` configuration value passed to the
+  ``BeakerSessionFactoryConfig`` constructor.  If this value is passed and
+  it's not false, session cookies will be set even on responses resulting
+  from an exception.
+
+- Update to new relationship between ``new_csrf_token`` and
+  ``get_csrf_token`` as described in Pyramid 1.0a9 interfaces.
+
+0.3 (2010-12-29)
+----------------
+
+- Support ISession flash/csrf API added to Pyramid 1.0a8+.
+
 0.2 (2010-11-27)
 ----------------
 
