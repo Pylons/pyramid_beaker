@@ -205,12 +205,12 @@ class Test_session_cookie_on_exception(unittest.TestCase):
     def test_default_cookie_on_exception_setting(self):
         request = DummyRequest()
         session = self._makeOne(request)
-        self.assertEqual(session._cookie_on_exception, False)
+        self.assertEqual(session._cookie_on_exception, True)
 
     def test_cookie_on_exception_setting(self):
         request = DummyRequest()
-        session = self._makeOne(request, cookie_on_exception=True)
-        self.assertEqual(session._cookie_on_exception, True)
+        session = self._makeOne(request, cookie_on_exception=False)
+        self.assertEqual(session._cookie_on_exception, False)
     
     def _assert_session_persisted(self, request, session, expected):
         # Checking response headers not likely best method of asserting 
@@ -225,12 +225,12 @@ class Test_session_cookie_on_exception(unittest.TestCase):
     def test_request_call_back_without_cookie_on_exception(self):
         request = DummyRequest()
         session = self._makeOne(request)
-        self._assert_session_persisted(request, session, False)
+        self._assert_session_persisted(request, session, True)
 
     def test_request_call_back_with_cookie_on_exception(self):
         request = DummyRequest()
-        session = self._makeOne(request, cookie_on_exception=True)
-        self._assert_session_persisted(request, session, True)
+        session = self._makeOne(request, cookie_on_exception=False)
+        self._assert_session_persisted(request, session, False)
 
 class TestCacheConfiguration(unittest.TestCase):
     def _set_settings(self):

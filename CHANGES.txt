@@ -1,7 +1,11 @@
 Next release
 ------------
 
-- ...
+- The default value for the ``cookie_on_exception`` parameter to
+  ``pyramid_beaker.BeakerSessionFactoryConfig`` is now ``True``.  This means
+  that when view code causes an exception to be raised, and the session has
+  been mutated, a cookie will be sent back in the response.  Previously its
+  default value was ``False``.
 
 0.4 (2011-01-08)
 ----------------

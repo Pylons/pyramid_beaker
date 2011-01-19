@@ -15,7 +15,7 @@ def BeakerSessionFactoryConfig(**options):
     class PyramidBeakerSessionObject(SessionObject):
         implements(ISession)
         _options = options
-        _cookie_on_exception = _options.pop('cookie_on_exception', False)
+        _cookie_on_exception = _options.pop('cookie_on_exception', True)
         def __init__(self, request):
             SessionObject.__init__(self, request.environ, **self._options)
             def session_callback(request, response):
