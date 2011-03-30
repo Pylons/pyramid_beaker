@@ -1,5 +1,5 @@
-Next release
-------------
+0.5 (2011-03-30)
+----------------
 
 - The default value for the ``cookie_on_exception`` parameter to
   ``pyramid_beaker.BeakerSessionFactoryConfig`` is now ``True``.  This means
