@@ -45,7 +45,7 @@ in the ``__init__.py`` of your Pyramid application that uses an
 .. code-block:: python
 
    from pyramid_beaker import session_factory_from_settings
-   from pyramid.configuration import configurator
+   from pyramid.config import Configurator
 
    def app(global_config, **settings):
        """ This function returns a WSGI application.
