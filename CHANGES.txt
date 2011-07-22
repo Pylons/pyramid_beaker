@@ -1,3 +1,8 @@
+Next release
+------------
+
+- Add a tox.ini for Jenkins testing.
+
 0.5 (2011-03-30)
 ----------------
 
