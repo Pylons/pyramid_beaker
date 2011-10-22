@@ -2,6 +2,7 @@ Next release
 ------------
 
 - Add a tox.ini for Jenkins testing.
+- Add includeme function to ease application setup.
 
 0.5 (2011-03-30)
 ----------------

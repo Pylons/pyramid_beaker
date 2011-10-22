@@ -114,4 +114,6 @@ Contributors
 
 - Joachim Krebs 2011/01/03
 
-- Wichert Akkerman, 29-04-2011
+- Wichert Akkerman, 2011/04/29
+
+- Blaise Laflamme, 2011/10/22

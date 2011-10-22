@@ -304,3 +304,14 @@ class TestCacheConfiguration(unittest.TestCase):
         short_term = beaker.cache.cache_regions.get('short_term')
         self.assertEqual(short_term.get('url'), settings['cache.url'])
         self.assertEqual(default_term.get('url'), settings['cache.url'])
+
+class TestIncludeMe(unittest.TestCase):
+    def test_includeme(self):
+        from pyramid.interfaces import ISessionFactory
+        from pyramid import testing
+        from pyramid_beaker import includeme
+        config = testing.setUp(settings={})
+        includeme(config)
+        session_factory = config.registry.queryUtility(ISessionFactory)
+        self.assertEqual(str(session_factory), 
+                "<class 'pyramid_beaker.PyramidBeakerSessionObject'>")

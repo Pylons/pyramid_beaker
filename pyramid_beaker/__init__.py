@@ -151,3 +151,8 @@ def set_cache_regions_from_settings(settings):
             if 'url' not in region_settings:
                 region_settings['url'] = cache_settings.get('url')
             cache.cache_regions[region] = region_settings
+
+def includeme(config):
+    session_factory = session_factory_from_settings(config.registry.settings)
+    config.set_session_factory(session_factory)
+    set_cache_regions_from_settings(config.registry.settings)
