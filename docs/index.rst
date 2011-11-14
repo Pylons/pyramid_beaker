@@ -151,6 +151,9 @@ Inherited region settings
 The following optional region settings inherit from the main cache
 configuration or default as specified:
 
+``enabled``
+	Inherits or defaults to True.
+
 ``expire``
   Inherits or defaults to 60 seconds.
 

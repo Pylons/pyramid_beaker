@@ -144,6 +144,11 @@ def set_cache_regions_from_settings(settings):
                 if key.startswith(region):
                     region_settings[key.split('.')[1]] = value
             region_settings['expire'] = int(region_settings.get('expire', 60))
+            if 'enabled' not in region_settings:
+                enabled_value_source = cache_settings
+            else:
+                enabled_value_source = region_settings
+            region_settings['enabled'] = enabled_value_source.get('enabled', 'true').lower() == 'true'
             if 'lock_dir' not in region_settings:
                 region_settings['lock_dir'] = cache_settings.get('lock_dir')
             if 'type' not in region_settings:
