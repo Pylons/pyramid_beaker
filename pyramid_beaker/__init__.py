@@ -2,6 +2,7 @@ import os
 
 from beaker import cache
 from beaker.session import SessionObject
+from beaker.util import coerce_cache_params
 from beaker.util import coerce_session_params
 
 from pyramid.interfaces import ISession
@@ -136,20 +137,30 @@ def set_cache_regions_from_settings(settings):
             if key.startswith(prefix):
                 name = key.split(prefix)[1].strip()
                 cache_settings[name] = settings[key].strip()
-    if cache_settings['regions']:
-        for region in cache_settings['regions'].split(','):
-            region = region.strip()
-            region_settings = {}
-            for key, value in cache_settings.items():
-                if key.startswith(region):
-                    region_settings[key.split('.')[1]] = value
-            region_settings['expire'] = int(region_settings.get('expire', 60))
-            if 'lock_dir' not in region_settings:
-                region_settings['lock_dir'] = cache_settings.get('lock_dir')
-            if 'type' not in region_settings:
-                region_settings['type'] = cache_settings.get('type', 'memory')
-            if 'url' not in region_settings:
-                region_settings['url'] = cache_settings.get('url')
+    coerce_cache_params(cache_settings)
+
+    if 'enabled' not in cache_settings:
+        cache_settings['enabled'] = True
+
+    regions = cache_settings['regions']
+    if regions:
+        for region in regions:
+            if not region: continue
+            region_settings = {
+                'data_dir': cache_settings.get('data_dir'),
+                'lock_dir': cache_settings.get('lock_dir'),
+                'expire': cache_settings.get('expire', 60),
+                'enabled': cache_settings['enabled'],
+                'key_length': cache_settings.get('key_length', 250),
+                'type': cache_settings.get('type'),
+                'url': cache_settings.get('url'),
+            }
+            region_prefix = '%s.' % region
+            region_len = len(region_prefix)
+            for key in cache_settings.keys():
+                if key.startswith(region_prefix):
+                    region_settings[key[region_len:]] = cache_settings.pop(key)
+            coerce_cache_params(region_settings)
             cache.cache_regions[region] = region_settings
 
 def includeme(config):
