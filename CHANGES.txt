@@ -1,3 +1,9 @@
+Next release
+------------
+
+- Beaker 1.6+ compat: added support for ``key_length`` and ``enabled``
+  options.
+
 0.6 (2011-11-12)
 ----------------
 
