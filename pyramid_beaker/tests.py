@@ -262,7 +262,8 @@ class TestCacheConfiguration(unittest.TestCase):
         default_term = beaker.cache.cache_regions.get('default_term')
         self.assertEqual(default_term,
                          {'url': None, 'expire': 60, 'type': 'memory',
-                          'lock_dir': None, 'enabled': True})
+                          'lock_dir': None, 'data_dir': None, 'enabled': True,
+                          'key_length': 250,})
     
     def test_add_cache_multiple_region(self):
         from pyramid_beaker import set_cache_regions_from_settings

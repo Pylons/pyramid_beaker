@@ -151,11 +151,17 @@ Inherited region settings
 The following optional region settings inherit from the main cache
 configuration or default as specified:
 
+``data_dir``
+  Inherits if specified.
+
 ``enabled``
 	Inherits or defaults to True.
 
 ``expire``
   Inherits or defaults to 60 seconds.
+
+``key_length``
+  Inherits or defaults to 250 characters.
 
 ``lock_dir``
   Inherits if specified.
