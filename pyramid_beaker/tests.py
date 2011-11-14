@@ -260,9 +260,9 @@ class TestCacheConfiguration(unittest.TestCase):
         del settings['cache.default_term.expire']
         set_cache_regions_from_settings(settings)
         default_term = beaker.cache.cache_regions.get('default_term')
-        self.assertEqual(default_term, {'url': None, 'expire': 60,
-                                      'type': 'memory', 'lock_dir': None,
-                                      'enabled': True})
+        self.assertEqual(default_term,
+                         {'url': None, 'expire': 60, 'type': 'memory',
+                          'lock_dir': None, 'enabled': True})
     
     def test_add_cache_multiple_region(self):
         from pyramid_beaker import set_cache_regions_from_settings
@@ -271,7 +271,6 @@ class TestCacheConfiguration(unittest.TestCase):
         beaker.cache.cache_regions = {}
         settings['cache.regions'] = 'default_term, short_term'
         settings['cache.lock_dir'] = 'foo'
-        settings['cache.enabled'] = 'true'
         settings['cache.short_term.expire'] = '60'
         settings['cache.default_term.type'] = 'file'
         settings['cache.default_term.expire'] = '300'
@@ -309,6 +308,18 @@ class TestCacheConfiguration(unittest.TestCase):
         short_term = beaker.cache.cache_regions.get('short_term')
         self.assertEqual(short_term.get('url'), settings['cache.url'])
         self.assertEqual(default_term.get('url'), settings['cache.url'])
+    
+    def test_region_inherit_enabled(self):
+        from pyramid_beaker import set_cache_regions_from_settings
+        import beaker
+        settings = self._set_settings()
+        settings['cache.enabled'] = 'false'
+        beaker.cache.cache_regions = {}
+        set_cache_regions_from_settings(settings)
+        default_term = beaker.cache.cache_regions.get('default_term')
+        short_term = beaker.cache.cache_regions.get('short_term')
+        self.assertFalse(short_term.get('enabled'))
+        self.assertFalse(default_term.get('enabled'))
 
 class TestIncludeMe(unittest.TestCase):
     def test_includeme(self):
