@@ -119,3 +119,5 @@ Contributors
 - Carson Lam, 2011/07/16
 
 - Blaise Laflamme, 2011/10/22
+
+- Michael Merickel, 2011/11/13
