@@ -87,8 +87,7 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         session['a'] = 1
         session.__dict__['_dirty'] = False
         result = session.popitem()
-        self.failIf('a' in session)
-        self.assertEqual(result, ('a', 1))
+        self.assertNotEqual(result, None)
         self.assertEqual(session.__dict__['_dirty'], True)
 
     def test_flash_default(self):
