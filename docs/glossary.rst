@@ -15,4 +15,5 @@ Glossary
       by Ben Bangert.
 
    Pyramid
-      A `web framework <http://pylonshq.com/pyramid>`_.
+      A `web framework
+      <http://docs.pylonsproject.org/en/latest/docs/pyramid.html>`_.
