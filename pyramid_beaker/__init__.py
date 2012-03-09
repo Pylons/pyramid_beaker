@@ -9,6 +9,8 @@ from pyramid.interfaces import ISession
 from pyramid.settings import asbool
 from zope.interface import implements
 
+from binascii import hexlify
+
 def BeakerSessionFactoryConfig(**options):
     """ Return a Pyramid session factory using Beaker session settings
     supplied directly as ``**options``"""
@@ -79,7 +81,7 @@ def BeakerSessionFactoryConfig(**options):
 
         # CSRF API methods
         def new_csrf_token(self):
-            token = os.urandom(20).encode('hex')
+            token = hexlify(os.urandom(20))
             self['_csrft_'] = token
             return token
 
@@ -157,7 +159,7 @@ def set_cache_regions_from_settings(settings):
             }
             region_prefix = '%s.' % region
             region_len = len(region_prefix)
-            for key in cache_settings.keys():
+            for key in list(cache_settings.keys()):
                 if key.startswith(region_prefix):
                     region_settings[key[region_len:]] = cache_settings.pop(key)
             coerce_cache_params(region_settings)
