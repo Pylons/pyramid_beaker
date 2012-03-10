@@ -7,7 +7,7 @@ from beaker.util import coerce_session_params
 
 from pyramid.interfaces import ISession
 from pyramid.settings import asbool
-from zope.interface import implements
+from zope.interface import implementer
 
 from binascii import hexlify
 
@@ -15,8 +15,8 @@ def BeakerSessionFactoryConfig(**options):
     """ Return a Pyramid session factory using Beaker session settings
     supplied directly as ``**options``"""
 
+    @implementer(ISession)
     class PyramidBeakerSessionObject(SessionObject):
-        implements(ISession)
         _options = options
         _cookie_on_exception = _options.pop('cookie_on_exception', True)
         def __init__(self, request):
