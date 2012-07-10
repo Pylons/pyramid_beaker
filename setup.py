@@ -27,6 +27,16 @@ except:
 
 requires = ['pyramid', 'beaker']
 
+docs_extras = [
+    'Sphinx',
+    'docutils',
+    ]
+
+testing_extras = [
+    'nose',
+    'coverage',
+    ]
+
 setup(name='pyramid_beaker',
       version='0.6.1',
       description='Beaker session factory backend for Pyramid',
@@ -53,6 +63,10 @@ setup(name='pyramid_beaker',
       zip_safe=False,
       tests_require = requires,
       install_requires = requires,
+      extras_require = {
+          'testing':testing_extras,
+          'docs':docs_extras,
+          },
       test_suite="pyramid_beaker",
       )
 
