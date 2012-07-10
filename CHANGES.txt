@@ -1,3 +1,11 @@
+0.7 (unreleased)
+----------------
+
+- Dropped Jython support (may be re-added after Jython releases a 2.7-
+  compatible version).
+
+- Dropped Python 2.5 support.
+
 0.6.1 (2011-11-19)
 ------------------
 
