@@ -5,7 +5,7 @@
 *$py.class
 *.swp
 dist/
-env26/
+env*/
 .tox/
 coverage.xml
 nosetests.xml
