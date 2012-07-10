@@ -1,4 +1,4 @@
-0.7 (unreleased)
+0.7 (2012-07-10)
 ----------------
 
 - Python 3.2 compatibility.
