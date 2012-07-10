@@ -18,15 +18,15 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         session['fred'] = 42
         session.save()
         self.assertEqual(session.accessed(), True)
-        self.failUnless(len(request.callbacks) > 0)
+        self.assertTrue(len(request.callbacks) > 0)
         response= DummyResponse()
         request.callbacks[0](request, response)
-        self.failUnless(response.headerlist)
+        self.assertTrue(response.headerlist)
 
     def test_new(self):
         request = DummyRequest()
         session = self._makeOne(request)
-        self.failUnless(session.new)
+        self.assertTrue(session.new)
 
     def test___setitem__calls_save(self):
         request = DummyRequest()
@@ -53,22 +53,22 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         session = self._makeOne(request)
         session['a'] = 1
         session.clear()
-        self.failIf('a' in session)
+        self.assertFalse('a' in session)
         self.assertEqual(session.__dict__['_dirty'], True)
 
     def test_update(self):
         request = DummyRequest()
         session = self._makeOne(request)
         session.update({'a':1}, b=2)
-        self.failUnless('a' in session)
-        self.failUnless('b' in session)
+        self.assertTrue('a' in session)
+        self.assertTrue('b' in session)
         self.assertEqual(session.__dict__['_dirty'], True)
 
     def test_setdefault(self):
         request = DummyRequest()
         session = self._makeOne(request)
         session.setdefault('a', 'b')
-        self.failUnless('a' in session)
+        self.assertTrue('a' in session)
         self.assertEqual(session.__dict__['_dirty'], True)
         
     def test_pop(self):
@@ -77,7 +77,7 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         session['a'] = 1
         session.__dict__['_dirty'] = False
         result = session.pop('a')
-        self.failIf('a' in session)
+        self.assertFalse('a' in session)
         self.assertEqual(result, 1)
         self.assertEqual(session.__dict__['_dirty'], True)
 
@@ -154,13 +154,13 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         session['_csrft_'] = 'token'
         token = session.get_csrf_token()
         self.assertEqual(token, 'token')
-        self.failUnless('_csrft_' in session)
+        self.assertTrue('_csrft_' in session)
 
     def test_get_csrf_token_new(self):
         request = DummyRequest()
         session = self._makeOne(request)
         token = session.get_csrf_token()
-        self.failUnless(token)
+        self.assertTrue(token)
         self.assertEqual(session['_csrft_'], token)
 
 class Test_session_factory_from_settings(unittest.TestCase):
