@@ -2,7 +2,7 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    =
+SPHINXOPTS    = -W
 SPHINXBUILD   = sphinx-build
 PAPER         =
 
@@ -30,6 +30,12 @@ html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) _build/html
 	@echo
 	@echo "Build finished. The HTML pages are in _build/html."
+
+text:
+	mkdir -p _build/text _build/doctrees
+	$(SPHINXBUILD) -b text $(ALLSPHINXOPTS) _build/text
+	@echo
+	@echo "Build finished. The HTML pages are in _build/text."
 
 pickle:
 	mkdir -p _build/pickle _build/doctrees
@@ -68,3 +74,9 @@ linkcheck:
 	@echo
 	@echo "Link check complete; look for any errors in the above output " \
 	      "or in _build/linkcheck/output.txt."
+
+epub:
+	$(SPHINXBUILD) -b epub $(ALLSPHINXOPTS) _build/epub
+	@echo
+	@echo "Build finished. The epub file is in _build/epub."
+
