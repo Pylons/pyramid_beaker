@@ -11,6 +11,7 @@ from zope.interface import implementer
 
 from binascii import hexlify
 
+
 def BeakerSessionFactoryConfig(**options):
     """ Return a Pyramid session factory using Beaker session settings
     supplied directly as ``**options``"""
@@ -18,6 +19,7 @@ def BeakerSessionFactoryConfig(**options):
     class PyramidBeakerSessionObject(SessionObject):
         _options = options
         _cookie_on_exception = _options.pop('cookie_on_exception', True)
+
         def __init__(self, request):
             SessionObject.__init__(self, request.environ, **self._options)
             def session_callback(request, response):
@@ -80,7 +82,7 @@ def BeakerSessionFactoryConfig(**options):
 
         # CSRF API methods
         def new_csrf_token(self):
-            token = hexlify(os.urandom(20))
+            token = hexlify(os.urandom(20)).decode('ascii')
             self['_csrft_'] = token
             return token
 
@@ -126,11 +128,11 @@ def session_factory_from_settings(settings):
 
 def set_cache_regions_from_settings(settings):
     """ Add cache support to the Pylons application.
-    
+
     The ``settings`` passed to the configurator are used to setup
     the cache options. Cache options in the settings should start
     with either 'beaker.cache.' or 'cache.'.
-    
+
     """
     cache_settings = {'regions':None}
     for key in settings.keys():
