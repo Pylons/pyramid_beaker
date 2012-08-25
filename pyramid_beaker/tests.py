@@ -147,6 +147,8 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         session = self._makeOne(request)
         token = session.new_csrf_token()
         self.assertEqual(token, session['_csrft_'])
+        # make sure its not a bytestring on py3
+        self.assertTrue(str(token) == token) 
 
     def test_get_csrf_token(self):
         request = DummyRequest()
