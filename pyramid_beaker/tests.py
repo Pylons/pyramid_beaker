@@ -47,7 +47,7 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         session = self._makeOne(request)
         session.changed()
         self.assertEqual(session.__dict__['_dirty'], True)
-        
+
     def test_clear(self):
         request = DummyRequest()
         session = self._makeOne(request)
@@ -70,7 +70,7 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         session.setdefault('a', 'b')
         self.assertTrue('a' in session)
         self.assertEqual(session.__dict__['_dirty'], True)
-        
+
     def test_pop(self):
         request = DummyRequest()
         session = self._makeOne(request)
@@ -96,7 +96,7 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         session.flash('msg1')
         session.flash('msg2')
         self.assertEqual(session['_f_'], ['msg1', 'msg2'])
-        
+
     def test_flash_mixed(self):
         request = DummyRequest()
         session = self._makeOne(request)
@@ -148,7 +148,7 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         token = session.new_csrf_token()
         self.assertEqual(token, session['_csrft_'])
         # make sure its not a bytestring on py3
-        self.assertTrue(str(token) == token) 
+        self.assertTrue(str(token) == token)
 
     def test_get_csrf_token(self):
         request = DummyRequest()
@@ -164,6 +164,16 @@ class TestPyramidBeakerSessionObject(unittest.TestCase):
         token = session.get_csrf_token()
         self.assertTrue(token)
         self.assertEqual(session['_csrft_'], token)
+
+    def test_get_constant_csrf_token(self):
+        constant_token = 'FOO'
+        request = DummyRequest()
+        session = self._makeOne(request, constant_csrf_token=constant_token)
+        token = session.get_csrf_token()
+        self.assertEqual(token, constant_token)
+        self.assertEqual(session['_csrft_'], token)
+
+
 
 class Test_session_factory_from_settings(unittest.TestCase):
     def _callFUT(self, settings):
@@ -185,6 +195,17 @@ class Test_session_factory_from_settings(unittest.TestCase):
         factory = self._callFUT(settings)
         self.assertEqual(factory._cookie_on_exception, False)
 
+    def test_constant_csrf_token_set(self):
+        settings = {'session.constant_csrf_token':'foo'}
+        factory = self._callFUT(settings)
+        self.assertEqual(factory._constant_csrf_token, 'foo')
+
+    def test_constant_csrf_token_unset(self):
+        settings = {}
+        factory = self._callFUT(settings)
+        self.assertEqual(factory._constant_csrf_token, False)
+
+
 class DummyRequest:
     def __init__(self):
         self.callbacks = []
@@ -196,7 +217,7 @@ class DummyRequest:
 class DummyResponse:
     def __init__(self):
         self.headerlist = []
-    
+
 class Test_session_cookie_on_exception(unittest.TestCase):
 
     def _makeOne(self, request, **options):
@@ -212,12 +233,12 @@ class Test_session_cookie_on_exception(unittest.TestCase):
         request = DummyRequest()
         session = self._makeOne(request, cookie_on_exception=False)
         self.assertEqual(session._cookie_on_exception, False)
-    
+
     def _assert_session_persisted(self, request, session, expected):
-        # Checking response headers not likely best method of asserting 
+        # Checking response headers not likely best method of asserting
         # if Beaker's SessionObject.persist method was called.
         # Not sure of best method of doing this.
-        request.exception = True 
+        request.exception = True
         session['use it'] = True
         response = DummyResponse()
         request.callbacks[0](request, response)
@@ -242,7 +263,7 @@ class TestCacheConfiguration(unittest.TestCase):
                 'cache.default_term.expire':'300',
                 'cache.long_term.expire':'3600',
                 }
-    
+
     def test_add_cache_no_regions(self):
         from pyramid_beaker import set_cache_regions_from_settings
         import beaker
@@ -265,7 +286,7 @@ class TestCacheConfiguration(unittest.TestCase):
                          {'url': None, 'expire': 60, 'type': 'memory',
                           'lock_dir': None, 'data_dir': None, 'enabled': True,
                           'key_length': 250,})
-    
+
     def test_add_cache_multiple_region(self):
         from pyramid_beaker import set_cache_regions_from_settings
         import beaker
@@ -293,7 +314,7 @@ class TestCacheConfiguration(unittest.TestCase):
         self.assertEqual(default_term.get('type'),
                          settings['cache.default_term.type'])
         self.assertFalse(default_term.get('enabled'))
-    
+
     def test_region_inherit_url(self):
         from pyramid_beaker import set_cache_regions_from_settings
         import beaker
@@ -310,7 +331,7 @@ class TestCacheConfiguration(unittest.TestCase):
         short_term = beaker.cache.cache_regions.get('short_term')
         self.assertEqual(short_term.get('url'), settings['cache.url'])
         self.assertEqual(default_term.get('url'), settings['cache.url'])
-    
+
     def test_region_inherit_enabled(self):
         from pyramid_beaker import set_cache_regions_from_settings
         import beaker
@@ -331,5 +352,5 @@ class TestIncludeMe(unittest.TestCase):
         config = testing.setUp(settings={})
         includeme(config)
         session_factory = config.registry.queryUtility(ISessionFactory)
-        self.assertEqual(str(session_factory), 
+        self.assertEqual(str(session_factory),
                 "<class 'pyramid_beaker.PyramidBeakerSessionObject'>")
