@@ -19,6 +19,7 @@ def BeakerSessionFactoryConfig(**options):
     class PyramidBeakerSessionObject(SessionObject):
         _options = options
         _cookie_on_exception = _options.pop('cookie_on_exception', True)
+        _constant_csrf_token = _options.pop('constant_csrf_token', False)
 
         def __init__(self, request):
             SessionObject.__init__(self, request.environ, **self._options)
@@ -82,7 +83,8 @@ def BeakerSessionFactoryConfig(**options):
 
         # CSRF API methods
         def new_csrf_token(self):
-            token = hexlify(os.urandom(20)).decode('ascii')
+            token = (self._constant_csrf_token
+                     or hexlify(os.urandom(20)).decode('ascii'))
             self['_csrft_'] = token
             return token
 
