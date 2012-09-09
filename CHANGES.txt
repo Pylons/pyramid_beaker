@@ -5,6 +5,10 @@ Next release
   instead of correctly being a string.  See
   https://github.com/Pylons/pyramid_beaker/pull/12
 
+- A new argument to PyramidBeakerSessionFactoryConfig named
+  ``constant_csrf_token`` is now permitted for test configuration purposes.
+  See https://github.com/Pylons/pyramid_beaker/pull/13 for more information.
+
 0.7 (2012-07-10)
 ----------------
 
