@@ -1,5 +1,5 @@
-Next release
-------------
+0.8 (2013-06-28)
+----------------
 
 - On Python 3, the CSRF token returned by new_csrf_token was a bytestring
   instead of correctly being a string.  See
