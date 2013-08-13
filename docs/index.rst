@@ -1,6 +1,8 @@
 pyramid_beaker
 ==============
 
+.. _overview:
+
 Overview
 --------
 
