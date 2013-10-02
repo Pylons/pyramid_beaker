@@ -19,7 +19,7 @@ Install using setuptools, e.g. (within a virtualenv)::
 Setup
 -----
 
-Once :mod:`pyramid_beaker` is installed, you must use the ``config.include`` 
+Once :mod:`pyramid_beaker` is installed, you typically use the ``config.include`` 
 mechanism to include it into your Pyramid project's configuration. In your 
 Pyramid project's ``__init__.py``:
 
@@ -41,12 +41,15 @@ Usage
 
 Session management
 ``````````````````
-
-In the configuration portion of your :term:`Pyramid` app, if you are not using 
-the default activation setup, use the 
+If you have included pyramid_beaker in your Pyramid project's configuration
+as shown above then :func:`pyramid_beaker.session_factory_from_settings`
+is called automatically and you need do nothing else.
+Otherwise you will need to create a Pyramid 
+:term:`session factory` by adding a call to either the
 :func:`pyramid_beaker.BeakerSessionFactoryConfig` function or the
-:func:`pyramid_beaker.session_factory_from_settings` function to
-create a Pyramid :term:`session factory`.  Subsequently register that
+:func:`pyramid_beaker.session_factory_from_settings` function in
+the configuration code of your Pyramid project's ``__init__.py`` file
+and subsequently register that
 session factory with Pyramid.  At that point, accessing
 ``request.session`` will provide a Pyramid session using Beaker as a
 backend.
