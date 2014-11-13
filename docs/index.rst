@@ -29,7 +29,7 @@ Pyramid project's ``__init__.py``:
    config.include('pyramid_beaker')
 
 Alternately, instead of using the Configurator's ``include`` method, you can
-activate Pyramid by changing your application's ``.ini`` file, use the
+activate :mod:`pyramid_beaker` by changing your application's ``.ini`` file, use the
 following line:
 
 .. code-block:: ini
