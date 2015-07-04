@@ -25,8 +25,10 @@ def BeakerSessionFactoryConfig(**options):
             SessionObject.__init__(self, request.environ, **self._options)
             def session_callback(request, response):
                 exception = getattr(request, 'exception', None)
-                if (exception is None or self._cookie_on_exception
-                    and self.accessed()):
+                if (
+                    (exception is None or self._cookie_on_exception)
+                    and self.accessed()
+                ):
                     self.persist()
                     headers = self.__dict__['_headers']
                     if headers['set_cookie'] and headers['cookie_out']:
