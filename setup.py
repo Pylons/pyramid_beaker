@@ -30,6 +30,7 @@ requires = ['pyramid', 'beaker']
 docs_extras = [
     'Sphinx',
     'docutils',
+    'pylons-sphinx-themes',
     ]
 
 testing_extras = [
@@ -55,8 +56,8 @@ setup(name='pyramid_beaker',
         ],
       keywords='web wsgi pylons pyramid',
       author="Chris McDonough, Agendaless Consulting",
-      author_email="pylons-devel@googlegroups.com",
-      url="http://docs.pylonsproject.org/projects/pyramid_beaker/en/latest/",
+      author_email="pylons-discuss@googlegroups.com",
+      url="https://docs.pylonsproject.org/projects/pyramid_beaker/en/latest/",
       license="BSD-derived (http://www.repoze.org/LICENSE.txt)",
       packages=find_packages(),
       include_package_data=True,
@@ -69,4 +70,3 @@ setup(name='pyramid_beaker',
           },
       test_suite="pyramid_beaker",
       )
-
