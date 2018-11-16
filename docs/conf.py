@@ -17,8 +17,7 @@
 # make it absolute, like shown here.
 #sys.path.append(os.path.abspath('some/directory'))
 
-import sys
-import os
+import datetime
 import pylons_sphinx_themes
 
 # Add and use Pylons theme
@@ -43,7 +42,8 @@ master_doc = 'index'
 
 # General substitutions.
 project = 'pyramid_beaker'
-copyright = '2012, Agendaless Consulting <chrism@plope.com>'
+thisyear = datetime.datetime.now().year
+copyright = '2012-%s, Agendaless Consulting <chrism@plope.com>' % thisyear
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
